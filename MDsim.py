@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import euclidean_distances as dis
 np.seterr(divide='ignore', invalid='ignore')
 
-A = 1
-B = 1
-M = 1
+A = 1 #LJ constent
+B = 1 #LJ constant
+M = 1 #Mass of molucule
 
+#creating 1/d as array
 def dist(r):
     d = dis(r,r)
     shape_d = d.shape
@@ -15,6 +16,7 @@ def dist(r):
     d[d == np.inf] = 0
     return d.reshape(shape_d)
 
+#Creating force array
 def force(r):
     fx = r[:,0]*(12*A*dist(r)**14 - 6*B*dist(r)**8)
     fx = fx.sum(axis=1)
@@ -25,6 +27,7 @@ def force(r):
     f = np.array([fx,fy,fz])
     return np.transpose(f)
 
+#Updating r & v using Verlet algorithom
 def verlet(r,v):
     f1 = force(r)
     r1 = r + v*0.001 + 0.5*(force(r)/M)*0.001**2
@@ -32,6 +35,7 @@ def verlet(r,v):
     v1 = v + 0.5*((f1 + f2)/M)*0.001
     return r1,v1
 
+#Collition with wall and molucules
 def col_wall(r):
     r1 = np.copy(r)
     shape_r = r1.shape
@@ -42,9 +46,10 @@ def col_wall(r):
     r1 = r1.reshape(shape_r)
     return np.multiply(r1,v)
 
-r = np.random.uniform(-135,135,size=[500,3])
-v = np.random.uniform(-500,500,size=[500,3])
+r = np.random.uniform(-135,135,size=[500,3]) #generating position array
+v = np.random.uniform(-500,500,size=[500,3]) #generating velocity array
 
+#starting iteration
 R = [r]
 V = [v]
 for i in range(0,1000):
@@ -58,6 +63,7 @@ print()
 R = np.array(R)
 V = np.array(V)
 
+#generating frames
 for i in range (len(R)):
     print('Generating frames',round(i*100/(len(R)-1),1),"%", end='\r')
     ax = plt.axes(projection ="3d")
@@ -70,6 +76,7 @@ for i in range (len(R)):
     plt.clf()
 print()
 
+#generating video
 import cv2
 import os
 path = '/home/deb/database/'
