@@ -80,7 +80,7 @@ print()
 import cv2
 import os
 path = '/home/deb/database/'
-video_out = '/home/deb/video1_out.mp4'
+video_out = '/home/deb/video_out.mp4'
 
 frm = os.listdir(path)
 frm=sorted(frm)
